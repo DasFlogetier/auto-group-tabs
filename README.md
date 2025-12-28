@@ -1,12 +1,14 @@
 # Auto-Group Tabs
 
-This is a Google Chrome extension which enables the configuration of tab groups for certain URLs. Navigating to such a URL will automatically add the tab to its configured group (creating the group if it does not exist).
+This is a browser extension for Google Chrome and Firefox which enables the configuration of tab groups for certain URLs. Navigating to such a URL will automatically add the tab to its configured group (creating the group if it does not exist).
 
 ## Development
 
 This project is built with [Vue](https://v3.vuejs.org/) and [Vite](https://vitejs.dev/).
 
 ### Setup
+
+> **Requirements:** Note that at least Node.js v24 is needed to develop and build this project.
 
 Clone this project:
 
@@ -34,12 +36,34 @@ In this mode, Chrome extension APIs accessed during production (e.g. `chrome.i18
 
 > **Note:** You probably want to use the [device toolbar](https://developers.google.com/web/tools/chrome-devtools/device-mode) of Chrome's devtools to give the options page a proper viewport. Chrome's options overlays are (at the time of writing) 400px wide, and I used a height of 600px during development.
 
-### Testing in Chrome
+### Testing in the Browser
+
+#### Chrome
 
 To test the extension in Chrome, you'll have to do a production build of it:
 
 ```bash
-npm run build
+npm run build:chromium
 ```
 
-This will create a subfolder with the name `extension` inside the project, which can be installed in your Chrome browser.
+This will create a subfolder with the name `extension-chromium` inside the project, which can be installed in your Chrome browser.
+
+#### Firefox
+
+To test the extension in Firefox, you'll have to do a production build of it and zip it:
+
+```bash
+npm run pack:gecko
+```
+
+This will create a file named `auto-group-tabs.gecko.zip` inside the project root, which can be temporarily added under `about:debugging#/runtime/this-firefox`.
+
+### Do a Production Build
+
+Skim through the `package.json` to find what to run for your target browser. To do all the work necessary for distributing the extension, run:
+
+```bash
+npm run deploy
+```
+
+This will run all tests, create production builds for all supported browsers, and pack them into zip files ready for upload to the respective extension stores.

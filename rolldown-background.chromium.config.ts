@@ -12,7 +12,7 @@ export default defineConfig({
   },
   input: resolve(__dirname, 'src/background.ts'),
   output: {
-    file: resolve(__dirname, 'extension/background.js'),
+    file: resolve(__dirname, `extension-chromium/background.js`),
     cleanDir: false,
   },
 })

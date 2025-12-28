@@ -40,9 +40,7 @@ export default defineConfig({
   server: { port: 6655 },
   build: {
     assetsDir: '.',
-    outDir: '../extension',
     emptyOutDir: true,
-    target: 'chrome89',
     sourcemap: true,
     minify: 'oxc',
     cssMinify: 'lightningcss',
@@ -52,10 +50,5 @@ export default defineConfig({
   },
   css: {
     transformer: 'lightningcss',
-    lightningcss: {
-      targets: {
-        chrome: 89,
-      },
-    },
   },
 })

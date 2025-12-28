@@ -3,8 +3,12 @@ import { resolve } from 'node:path'
 
 import archiver from 'archiver'
 
+const target = process.argv[2]
+
 const __dirname = new URL('.', import.meta.url).pathname
-const output = createWriteStream(resolve(__dirname, 'auto-group-tabs.zip'))
+const output = createWriteStream(
+  resolve(__dirname, `auto-group-tabs.${target}.zip`),
+)
 const archive = archiver('zip')
 
 output.on('close', () => {
@@ -17,7 +21,7 @@ archive.on('error', error => {
 
 archive.pipe(output)
 
-archive.directory(resolve(__dirname, 'extension'), false, data => {
+archive.directory(resolve(__dirname, `extension-${target}`), false, data => {
   if (['.DS_Store', 'thumbs.db', 'desktop.ini'].includes(data.name)) {
     return false
   }

@@ -4,25 +4,31 @@
     "dev": "wireit",
     "dev:background": "wireit",
     "dev:test": "wireit",
-    "build:options": "wireit",
-    "build:background": "wireit",
+    "build:options:chromium": "wireit",
+    "build:options:gecko": "wireit",
+    "build:background:chromium": "wireit",
+    "build:background:gecko": "wireit",
+    "build:manifest:chromium": "wireit",
+    "build:manifest:gecko": "wireit",
     "test:types": "wireit",
     "test:lint": "wireit",
     "test:unit": "wireit",
     "test:browser": "wireit",
     "test": "wireit",
-    "build": "wireit",
-    "pack": "wireit",
+    "build:chromium": "wireit",
+    "build:gecko": "wireit",
+    "pack:chromium": "wireit",
+    "pack:gecko": "wireit",
     "deploy": "wireit"
   },
   "wireit": {
     "dev": {
-      "command": "vite --host",
+      "command": "vite -c vite.chromium.config.ts --host",
       "service": true,
       "files": [
         "src/**/*",
         "!src/node_modules",
-        "vite.config.ts"
+        "vite.chromium.config.ts"
       ]
     },
     "dev:background": {
@@ -33,30 +39,89 @@
       ]
     },
     "dev:test": {
-      "command": "vitest",
+      "command": "vitest -c vite.chromium.config.ts",
       "service": true
     },
-    "build:options": {
-      "command": "vite build",
+    "build:options:chromium": {
+      "command": "vite -c vite.chromium.config.ts build",
       "files": [
         "src/**/*",
         "!src/node_modules",
-        "vite.config.ts"
+        "static/**/*",
+        "vite.chromium.config.ts"
       ],
       "output": [
-        "extension"
+        "extension-chromium",
+        "!extension-chromium/manifest.json",
+        "!extension-chromium/background.js"
       ]
     },
-    "build:background": {
-      "command": "rolldown -c rolldown-background.config.ts",
+    "build:options:gecko": {
+      "command": "vite -c vite.gecko.config.ts build",
       "files": [
-        "src/background.ts"
+        "src/**/*",
+        "!src/node_modules",
+        "static/**/*",
+        "vite.gecko.config.ts"
       ],
       "output": [
-        "extension/background.js"
+        "extension-gecko",
+        "!extension-gecko/manifest.json",
+        "!extension-gecko/background.js"
+      ]
+    },
+    "build:background:chromium": {
+      "command": "rolldown -c rolldown-background.chromium.config.ts",
+      "files": [
+        "src/**/*",
+        "!src/node_modules",
+        "rolldown-background.config.ts"
+      ],
+      "output": [
+        "extension-chromium/background.js"
       ],
       "dependencies": [
-        "build:options"
+        "build:options:chromium"
+      ]
+    },
+    "build:background:gecko": {
+      "command": "rolldown -c rolldown-background.gecko.config.ts",
+      "files": [
+        "src/**/*",
+        "!src/node_modules",
+        "rolldown-background.config.ts"
+      ],
+      "output": [
+        "extension-gecko/background.js"
+      ],
+      "dependencies": [
+        "build:options:gecko"
+      ]
+    },
+    "build:manifest:chromium": {
+      "command": "node -e 'fs.writeFileSync(\"extension-chromium/manifest.json\", JSON.stringify((await import(\"./src/manifest/manifest.chromium.ts\")).default, null, 2))'",
+      "files": [
+        "src/**/*",
+        "!src/node_modules"
+      ],
+      "output": [
+        "extension-chromium/manifest.json"
+      ],
+      "dependencies": [
+        "build:options:chromium"
+      ]
+    },
+    "build:manifest:gecko": {
+      "command": "node -e 'fs.writeFileSync(\"extension-gecko/manifest.json\", JSON.stringify((await import(\"./src/manifest/manifest.gecko.ts\")).default, null, 2))'",
+      "files": [
+        "src/**/*",
+        "!src/node_modules"
+      ],
+      "output": [
+        "extension-gecko/manifest.json"
+      ],
+      "dependencies": [
+        "build:options:gecko"
       ]
     },
     "test:types": {
@@ -79,10 +144,11 @@
       "output": []
     },
     "test:unit": {
-      "command": "vitest run",
+      "command": "vitest run -c vite.chromium.config.ts",
       "files": [
         "src/**/*",
-        "!src/node_modules"
+        "!src/node_modules",
+        "vite.chromium.config.ts"
       ],
       "output": [
         "src/node_modules/.vite/vitest"
@@ -111,29 +177,52 @@
         "test:browser"
       ]
     },
-    "build": {
+    "build:chromium": {
       "dependencies": [
         "test",
-        "build:options",
-        "build:background"
+        "build:options:chromium",
+        "build:background:chromium",
+        "build:manifest:chromium"
       ]
     },
-    "pack": {
-      "command": "node pack",
+    "build:gecko": {
+      "dependencies": [
+        "test",
+        "build:options:gecko",
+        "build:background:gecko",
+        "build:manifest:gecko"
+      ]
+    },
+    "pack:chromium": {
+      "command": "node pack.ts chromium",
       "files": [
-        "extension/**/*",
-        "pack.js"
+        "extension-chromium/**/*",
+        "pack.ts"
       ],
       "output": [
-        "auto-group-tabs.zip"
+        "auto-group-tabs.chromium.zip"
       ],
       "dependencies": [
-        "build"
+        "build:chromium"
+      ]
+    },
+    "pack:gecko": {
+      "command": "node pack.ts gecko",
+      "files": [
+        "extension-gecko/**/*",
+        "pack.ts"
+      ],
+      "output": [
+        "auto-group-tabs.gecko.zip"
+      ],
+      "dependencies": [
+        "build:gecko"
       ]
     },
     "deploy": {
       "dependencies": [
-        "pack"
+        "pack:chromium",
+        "pack:gecko"
       ]
     }
   },
@@ -154,6 +243,7 @@
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@playwright/test": "^1.57.0",
+    "@types/archiver": "^7.0.0",
     "@types/chrome": "^0.1.32",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-vue": "^6.0.3",
@@ -170,5 +260,8 @@
     "vitest": "^4.0.16",
     "vue-tsc": "^3.2.1",
     "wireit": "^0.14.12"
+  },
+  "engines": {
+    "node": ">=22.5.0"
   }
 }

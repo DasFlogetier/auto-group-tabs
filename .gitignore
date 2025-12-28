@@ -1,8 +1,8 @@
 node_modules
 .DS_Store
 *.local
-auto-group-tabs.zip
-/extension
+auto-group-tabs.*.zip
+/extension-*
 playwright-report
 /test-results
 .wireit

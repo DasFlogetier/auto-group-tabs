@@ -67,3 +67,9 @@ npm run deploy
 ```
 
 This will run all tests, create production builds for all supported browsers, and pack them into zip files ready for upload to the respective extension stores.
+
+### Contributing
+
+Contributions to this project are welcome, but to spare everyone involved some time: Please open an issue first to discuss your ideas before you start working on them.
+
+Pull requests without an issue used to be a grounds for discussion, just because of the amount of time already invested. But since due to AI, contributions have become a commodity for many, I view unsolicited pull requests as noise pollution and will close them without review.

@@ -1,6 +1,7 @@
 import { resolve } from 'node:path'
 
 import { defineConfig } from 'rolldown'
+import replace from '@rollup/plugin-replace'
 
 const __dirname = new URL('.', import.meta.url).pathname
 
@@ -15,4 +16,9 @@ export default defineConfig({
     file: resolve(__dirname, `extension-gecko/background.js`),
     cleanDir: false,
   },
+  plugins: [
+    replace({
+      __TARGET__: JSON.stringify('gecko'),
+    }),
+  ],
 })

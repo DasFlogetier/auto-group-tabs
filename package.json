@@ -243,6 +243,7 @@
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@playwright/test": "^1.57.0",
+    "@rollup/plugin-replace": "^6.0.3",
     "@types/archiver": "^7.0.0",
     "@types/chrome": "^0.1.32",
     "@types/node": "^24.10.1",

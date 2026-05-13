@@ -18,6 +18,8 @@ declare module '*.vue' {
 }
 
 declare global {
+  declare const __TARGET__: 'chromium' | 'gecko'
+
   // Augment @types/chrome with split view ID
   namespace chrome.tabs {
     declare const SPLIT_VIEW_ID_NONE: number

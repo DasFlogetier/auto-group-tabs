@@ -3,6 +3,9 @@ import baseConfig from './vite.base.config'
 
 export default defineConfig({
   ...baseConfig,
+  define: {
+    __TARGET__: JSON.stringify('chromium'),
+  },
   build: {
     ...baseConfig.build,
     outDir: '../extension-chromium',

@@ -20,5 +20,6 @@
     "**/extension/**": true
   },
   "typescript.tsdk": "node_modules/typescript/lib",
-  "vue.suggest.componentNameCasing": "preferPascalCase"
+  "vue.suggest.componentNameCasing": "preferPascalCase",
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }

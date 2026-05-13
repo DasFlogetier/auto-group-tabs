@@ -704,3 +704,12 @@ chrome.action.onClicked.addListener(async () => {
   console.debug('Trigger extension action')
   await chrome.runtime.openOptionsPage()
 })
+
+// Firefox sends background scripts to sleep relatively quickly
+// To re-enable the extension when a tab's URL changes, we need to
+// synchronously attach update listeners in the background script
+if (__TARGET__ === 'gecko') {
+  const noop = () => {}
+  chrome.tabs.onUpdated.addListener(noop)
+  chrome.windows.onCreated.addListener(noop)
+}
